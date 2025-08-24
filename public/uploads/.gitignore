@@ -1,0 +1,3 @@
+# Keep uploads directory out of VCS except this file
+*
+!.gitignore

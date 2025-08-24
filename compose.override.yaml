@@ -1,0 +1,8 @@
+
+services:
+  ###> doctrine/doctrine-bundle ###
+  database:
+    ports:
+      # Map container 5432 to host 5432 (was ephemeral because only container port specified)
+      - "5432:5432"
+###< doctrine/doctrine-bundle ###
