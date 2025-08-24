@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: PHP ${{ matrix.php }} Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '8.2' ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, intl, pdo_pgsql
+          coverage: none
+          tools: composer:v2
+
+      - name: Validate composer.json
+        run: composer validate --no-check-publish
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Cache warmup
+        run: php bin/console cache:warmup --env=test
+
+      - name: Run PHPUnit
+        run: |
+          vendor/bin/phpunit --colors=always
+
+      - name: Show disk usage (debug)
+        if: always()
+        run: du -h -d1 . | sort -h
+
+  # Optional: Add a separate job for coding standards or static analysis later
+  # qa:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: shivammathur/setup-php@v2
+  #       with:
+  #         php-version: '8.2'
+  #     - run: composer install --no-interaction --prefer-dist --no-progress
+  #     - run: vendor/bin/php-cs-fixer --version || true
