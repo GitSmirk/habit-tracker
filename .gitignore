@@ -10,12 +10,12 @@
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
-/phpunit.xml
+# Keep cache out of VCS; commit phpunit.xml so CI uses identical config
+/.phpunit.cache/
+###> phpunit/phpunit ###
+# Keep cache out of VCS; commit phpunit.xml so CI uses identical config
 /.phpunit.cache/
 ###< phpunit/phpunit ###
-
-# Additional PHPUnit cache
-/.phpunit.result.cache
 
 # Node / Frontend (if/when using asset build tools)
 node_modules/
